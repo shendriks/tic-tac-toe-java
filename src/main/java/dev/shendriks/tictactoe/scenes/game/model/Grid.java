@@ -12,6 +12,7 @@ public class Grid {
     private final Cell[][] cells = new Cell[3][3];
     private final Map<Symbol, Integer> symbolCounts = new HashMap<>(2);
     private final List<Map<Symbol, List<Position>>> symbolPositions = new ArrayList<>(8);
+    private boolean areSymbolPositionsDirty = true;
 
     private Grid() {
         for (int i = 0; i < 3; i++) {
@@ -68,11 +69,6 @@ public class Grid {
             throw new GameAlreadyFinishedException();
         }
 
-        Symbol symbol = whoseTurnIsIt();
-        if (symbol == null) {
-            throw new GameAlreadyFinishedException();
-        }
-
         int row = pos.row();
         int col = pos.col();
 
@@ -80,8 +76,10 @@ public class Grid {
             throw new CellOccupiedException();
         }
 
+        Symbol symbol = isItXsTurn() ? Symbol.X : Symbol.O;
         cells[row][col].setSymbol(symbol);
         symbolCounts.put(symbol, symbolCounts.get(symbol) + 1);
+        areSymbolPositionsDirty = true;
     }
 
     public void clearCell(Position pos) {
@@ -91,6 +89,7 @@ public class Grid {
         Symbol symbol = cells[row][col].getSymbol();
         symbolCounts.put(symbol, symbolCounts.get(symbol) - 1);
         cells[row][col].setSymbol(Symbol.EMPTY);
+        areSymbolPositionsDirty = true;
     }
 
     public boolean isEmptyAt(Position pos) {
@@ -131,15 +130,16 @@ public class Grid {
     }
 
     public List<Map<Symbol, List<Position>>> getSymbolPositions() {
-        calculateSymbolPositions();
-        
+        if (areSymbolPositionsDirty) {
+            calculateSymbolPositions();
+            areSymbolPositionsDirty = false;
+        }
+
         return symbolPositions;
     }
 
     public GameState getGameState() {
-        calculateSymbolPositions();
-
-        for (Map<Symbol, List<Position>> line : symbolPositions) {
+        for (Map<Symbol, List<Position>> line : getSymbolPositions()) {
             if (line.get(Symbol.X).size() == 3) {
                 return GameState.XWins;
             }
@@ -154,18 +154,6 @@ public class Grid {
         }
 
         return GameState.GameNotFinished;
-    }
-
-    public Symbol whoseTurnIsIt() {
-        if (isGameFinished()) {
-            return null;
-        }
-
-        if (isItXsTurn()) {
-            return Symbol.X;
-        }
-
-        return Symbol.O;
     }
 
     /**

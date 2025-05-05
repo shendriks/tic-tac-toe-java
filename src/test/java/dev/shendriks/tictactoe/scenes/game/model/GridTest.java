@@ -106,24 +106,6 @@ class GridTest {
     }
 
     @Test
-    void testWhoseTurnIsIt() {
-        Grid grid = Grid.createEmpty();
-
-        assertEquals(Symbol.X, grid.whoseTurnIsIt());
-
-        grid.setCell(new Position(0, 0));
-
-        assertEquals(Symbol.O, grid.whoseTurnIsIt());
-    }
-
-    @Test
-    void testWhoseTurnIsItReturnsNullIfGameIsFinished() {
-        Grid grid = Grid.createFromString("XOXXOXOXO");
-
-        assertNull(grid.whoseTurnIsIt());
-    }
-
-    @Test
     void testClearCell() {
         Grid grid = Grid.createFromString("XO-------");
 
