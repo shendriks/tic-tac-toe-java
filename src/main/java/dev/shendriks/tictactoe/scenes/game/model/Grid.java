@@ -5,11 +5,13 @@ import dev.shendriks.tictactoe.scenes.game.exception.GameAlreadyFinishedExceptio
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Grid {
     private final Cell[][] cells = new Cell[3][3];
     private final Map<Symbol, Integer> symbolCounts = new HashMap<>(2);
+    private final List<Map<Symbol, List<Position>>> symbolPositions = new ArrayList<>(8);
 
     private Grid() {
         for (int i = 0; i < 3; i++) {
@@ -20,6 +22,14 @@ public class Grid {
 
         symbolCounts.put(Symbol.X, 0);
         symbolCounts.put(Symbol.O, 0);
+
+        for (int i = 0; i < 8; i++) {
+            HashMap<Symbol, List<Position>> positions = new HashMap<>();
+            positions.put(Symbol.X, new ArrayList<>());
+            positions.put(Symbol.O, new ArrayList<>());
+            positions.put(Symbol.EMPTY, new ArrayList<>());
+            symbolPositions.add(positions);
+        }
     }
 
     public static Grid createEmpty() {
@@ -120,47 +130,25 @@ public class Grid {
         return cells[position.row()][position.col()].getSymbol();
     }
 
-    public GameState getGameState() {
-        // check rows
-        for (int i = 0; i < 3; i++) {
-            if (cells[i][0].isEmpty()) {
-                continue;
-            }
-            if (cells[i][0].isX() && cells[i][1].isX() && cells[i][2].isX()) {
-                return GameState.XWins;
-            }
-            if (cells[i][0].isO() && cells[i][1].isO() && cells[i][2].isO()) {
-                return GameState.OWins;
-            }
-        }
-
-        // check cols
-        for (int i = 0; i < 3; i++) {
-            if (cells[0][i].isEmpty()) {
-                continue;
-            }
-            if (cells[0][i].isX() && cells[1][i].isX() && cells[2][i].isX()) {
-                return GameState.XWins;
-            }
-            if (cells[0][i].isO() && cells[1][i].isO() && cells[2][i].isO()) {
-                return GameState.OWins;
-            }
-        }
-
-        // check diagonals
-        if (cells[0][0].isX() && cells[1][1].isX() && cells[2][2].isX()) {
-            return GameState.XWins;
-        }
-        if (cells[0][0].isO() && cells[1][1].isO() && cells[2][2].isO()) {
-            return GameState.OWins;
-        }
-        if (cells[0][2].isX() && cells[1][1].isX() && cells[2][0].isX()) {
-            return GameState.XWins;
-        }
-        if (cells[0][2].isO() && cells[1][1].isO() && cells[2][0].isO()) {
-            return GameState.OWins;
-        }
+    public List<Map<Symbol, List<Position>>> getSymbolPositions() {
+        calculateSymbolPositions();
         
+        return symbolPositions;
+    }
+
+    public GameState getGameState() {
+        calculateSymbolPositions();
+
+        for (Map<Symbol, List<Position>> line : symbolPositions) {
+            if (line.get(Symbol.X).size() == 3) {
+                return GameState.XWins;
+            }
+
+            if (line.get(Symbol.O).size() == 3) {
+                return GameState.OWins;
+            }
+        }
+
         if (isFull()) {
             return GameState.Draw;
         }
@@ -178,6 +166,36 @@ public class Grid {
         }
 
         return Symbol.O;
+    }
+
+    /**
+     * For each row, column and diagonal, calculate the positions of Xs, Os, and empty cells.
+     */
+    private void calculateSymbolPositions() {
+        for (Map<Symbol, List<Position>> line : symbolPositions) {
+            line.get(Symbol.X).clear();
+            line.get(Symbol.O).clear();
+            line.get(Symbol.EMPTY).clear();
+        }
+
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                Symbol symbol = getSymbol(new Position(row, col));
+
+                symbolPositions.get(row).get(symbol).add(new Position(row, col));
+                symbolPositions.get(col + 3).get(symbol).add(new Position(row, col));
+
+                boolean isDiag1 = row == col;
+                if (isDiag1) {
+                    symbolPositions.get(6).get(symbol).add(new Position(row, col));
+                }
+
+                boolean isDiag2 = row == 2 - col;
+                if (isDiag2) {
+                    symbolPositions.get(7).get(symbol).add(new Position(row, col));
+                }
+            }
+        }
     }
 
     private boolean isItXsTurn() {
