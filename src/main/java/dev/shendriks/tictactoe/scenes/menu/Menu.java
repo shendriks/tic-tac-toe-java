@@ -6,8 +6,6 @@ import dev.shendriks.tictactoe.scenes.game.player.PlayerType;
 
 import java.util.Scanner;
 
-import static java.lang.System.exit;
-
 public class Menu extends Scene {
     private final Scanner input = new Scanner(System.in);
 
@@ -44,7 +42,7 @@ public class Menu extends Scene {
                 case "exit":
                     done = true;
                     System.out.println("Goodbye!");
-                    exit(0); // todo: use a GameExit event for this
+                    exitGame();
                     break;
                 default:
                     System.out.println("Unknown command! Allowed commands are: help, start, exit");
