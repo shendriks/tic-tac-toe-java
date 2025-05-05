@@ -15,6 +15,9 @@ public class CpuHard implements Player {
         this.ownSymbol = ownSymbol;
     }
 
+    /**
+     * @return Make a move based on the Minimax algorithm.
+     */
     @Override
     public GameInput readInput() {
         System.out.println("Making move level \"hard\"");
@@ -36,6 +39,7 @@ public class CpuHard implements Player {
             grid.setCell(position);
             int value = min(depth - 1);
             grid.clearCell(position);
+
             if (value > maxValue) {
                 maxValue = value;
                 if (depth == maxDepth) {
@@ -59,6 +63,7 @@ public class CpuHard implements Player {
             grid.setCell(position);
             int value = max(depth - 1);
             grid.clearCell(position);
+
             if (value < minValue) {
                 minValue = value;
             }
@@ -67,12 +72,19 @@ public class CpuHard implements Player {
         return minValue;
     }
 
+    /**
+     * @return int 2 if we win, 1 if it's a draw, or 0 if the opponent wins
+     */
     private int evaluate() {
         GameState whoWins = grid.getGameState();
 
-        if (whoWins.equals(GameState.Draw)) return 1;
-        else if (whoWins.equals(GameState.XWins) && ownSymbol.equals(Symbol.X)) return 2;
-        else if (whoWins.equals(GameState.OWins) && ownSymbol.equals(Symbol.O)) return 2;
+        if (whoWins.equals(GameState.Draw)) {
+            return 1;
+        } else if (whoWins.equals(GameState.XWins) && ownSymbol.equals(Symbol.X)) {
+            return 2;
+        } else if (whoWins.equals(GameState.OWins) && ownSymbol.equals(Symbol.O)) {
+            return 2;
+        }
 
         return 0;
     }

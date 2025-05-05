@@ -17,6 +17,9 @@ public class CpuEasy implements Player {
         this.rand = rand;
     }
 
+    /**
+     * @return GameInput A random move
+     */
     @Override
     public GameInput readInput() {
         System.out.println("Making move level \"easy\"");
