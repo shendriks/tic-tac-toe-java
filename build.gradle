@@ -21,11 +21,11 @@ configurations {
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.13.4')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'org.mockito:mockito-core:5.+'
-    testImplementation 'org.junit.platform:junit-platform-launcher:1.13.+'
-    mockitoAgent('org.mockito:mockito-core:5.+') {
+    testImplementation platform('org.junit:junit-bom:5.13.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testImplementation 'org.junit.platform:junit-platform-launcher:1.13.0'
+    testImplementation 'org.mockito:mockito-core:5.14.2'
+    mockitoAgent('org.mockito:mockito-core:5.14.2') {
         transitive = false
     }
 }
