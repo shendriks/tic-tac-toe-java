@@ -1,6 +1,7 @@
 # tic-tac-toe
 
 [![Java CI with Gradle](https://github.com/shendriks/tic-tac-toe-java/actions/workflows/gradle.yml/badge.svg)](https://github.com/shendriks/tic-tac-toe-java/actions/workflows/gradle.yml)
+[![Dependabot Updates](https://github.com/shendriks/tic-tac-toe-java/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/shendriks/tic-tac-toe-java/actions/workflows/dependabot/dependabot-updates)
 
 A CLI implementation of Tic Tac Toe in Java using the Minimax algorithm
 
