@@ -24,8 +24,8 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.13.4')
     testImplementation 'org.junit.jupiter:junit-jupiter:5.13.4'
     testImplementation 'org.junit.platform:junit-platform-launcher:1.13.4'
-    testImplementation 'org.mockito:mockito-core:5.19.0'
-    mockitoAgent('org.mockito:mockito-core:5.19.0') {
+    testImplementation 'org.mockito:mockito-core:5.20.0'
+    mockitoAgent('org.mockito:mockito-core:5.20.0') {
         transitive = false
     }
 }
