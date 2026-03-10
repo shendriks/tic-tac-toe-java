@@ -17,7 +17,10 @@ repositories {
 }
 
 configurations {
-    mockitoAgent
+    mockitoAgent {
+        canBeConsumed = false
+        canBeResolved = true
+    }
 }
 
 dependencies {
@@ -37,6 +40,7 @@ jacoco {
 
 test {
     useJUnitPlatform()
+    jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
     finalizedBy jacocoTestReport
 }
 
@@ -46,11 +50,5 @@ jacocoTestReport {
         xml.required = false
         csv.required = false
         html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
-    }
-}
-
-tasks {
-    test {
-        jvmArgs += "-javaagent:${configurations.mockitoAgent.asPath}"
     }
 }
